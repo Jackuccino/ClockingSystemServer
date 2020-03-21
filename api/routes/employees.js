@@ -13,10 +13,10 @@ router.get(
 
 router.get("/total-hours", EmployeeController.totalhours_get_all);
 
-router.get(
-  "/total-hours/:employeeName",
-  EmployeeController.totalhours_get_by_name
-);
+// router.get(
+//   "/total-hours/:employeeName",
+//   EmployeeController.totalhours_get_by_name
+// );
 
 router.patch("/check-in/:employeeName", EmployeeController.employee_check_in);
 

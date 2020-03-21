@@ -81,11 +81,95 @@ exports.totalhours_get_all = (req, res, next) => {
     });
 };
 
-exports.totalhours_get_by_name = (req, res, next) => {};
+// exports.totalhours_get_by_name = (req, res, next) => {
+//   const employee_name = req.params.employeeName;
+//   pool
+//     .connect()
+//     .then(client => {
+//       const sql = 'SELECT * FROM "Kacjux"."TotalHoursByName"($1);';
+//       const params = [employee_name];
+//       return client
+//         .query(sql, params)
+//         .then(result => {
+//           client.release();
+//           if (!result.rowCount) {
+//             return res.status(404).json({ message: "Employee not found" });
+//           }
+//           res.status(200).json({
+//             result: "ok",
+//             employees: {
+//               Name: result.rows[0].employeename,
+//               TotalHours: result.rows[0].totalhours
+//             }
+//           });
+//         })
+//         .catch(err => {
+//           client.release();
+//           console.log(err);
+//           res.status(500).json({ error: err });
+//         });
+//     })
+//     .catch(err => {
+//       console.log(err);
+//       res.status(500).json({ error: err });
+//     });
+// };
 
-exports.employee_check_in = (req, res, next) => {};
+exports.employee_check_in = (req, res, next) => {
+  const employee_name = req.params.employeeName;
+  pool
+    .connect()
+    .then(client => {
+      const sql = 'CALL "Kacjux"."CheckIn"($1, $2, $3);';
+      const params = [employee_name, req.body.hour, req.body.minute];
+      return client
+        .query(sql, params)
+        .then(result => {
+          client.release();
+          res.status(200).json({
+            result: "ok",
+            message: employee_name + " checking in... Done!"
+          });
+        })
+        .catch(err => {
+          client.release();
+          console.log(err);
+          res.status(500).json({ error: err });
+        });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+};
 
-exports.employee_check_out = (req, res, next) => {};
+exports.employee_check_out = (req, res, next) => {
+  const employee_name = req.params.employeeName;
+  pool
+    .connect()
+    .then(client => {
+      const sql = 'CALL "Kacjux"."CheckOut"($1, $2);';
+      const params = [employee_name, req.body.totalhours];
+      return client
+        .query(sql, params)
+        .then(result => {
+          client.release();
+          res.status(200).json({
+            result: "ok",
+            message: employee_name + " checking out... Done!"
+          });
+        })
+        .catch(err => {
+          client.release();
+          console.log(err);
+          res.status(500).json({ error: err });
+        });
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ error: err });
+    });
+};
 
 exports.monthly_reset = (req, res, next) => {
   pool
