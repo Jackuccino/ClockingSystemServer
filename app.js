@@ -23,7 +23,7 @@ app.use((req, res, next) => {
 });
 
 // Use REST routers
-app.use("/employees", employeeRoutes);
+app.use("/api/employees", employeeRoutes);
 
 // Error handling for invalid requests
 app.use((req, res, next) => {
@@ -37,8 +37,8 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500);
   res.json({
     error: {
-      message: err.message
-    }
+      message: err.message,
+    },
   });
 });
 
