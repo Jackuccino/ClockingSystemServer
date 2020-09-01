@@ -111,19 +111,18 @@ exports.employee_get_by_name = (req, res, next) => {
 // };
 
 exports.employee_check_in = (req, res, next) => {
-  const employee_name = req.params.employeeName;
   pool
     .connect()
     .then((client) => {
-      const sql = 'CALL "Kacjux"."CheckIn"($1, $2, $3);';
-      const params = [employee_name, req.body.hour, req.body.minute];
+      const sql = 'CALL "Kacjux"."ChockIn"($1, $2, $3);';
+      const params = [req.params.employeeName, req.body.hour, req.body.minute];
       return client
         .query(sql, params)
         .then((result) => {
           client.release();
           res.status(200).json({
             result: "ok",
-            message: employee_name + " checking in... Done!",
+            message: employee_name + " chocking in... Done!",
           });
         })
         .catch((err) => {
@@ -142,7 +141,7 @@ exports.employee_check_out = (req, res, next) => {
   pool
     .connect()
     .then((client) => {
-      const sql = 'CALL "Kacjux"."CheckOut"($1, $2);';
+      const sql = 'CALL "Kacjux"."ChockOut"($1, $2);';
       const params = [req.params.employeeName, req.body.totalHours];
       return client
         .query(sql, params)
@@ -150,7 +149,7 @@ exports.employee_check_out = (req, res, next) => {
           client.release();
           res.status(200).json({
             result: "ok",
-            message: employee_name + " checking out... Done!",
+            message: employee_name + " chocking out... Done!",
           });
         })
         .catch((err) => {
