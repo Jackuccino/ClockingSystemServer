@@ -29,12 +29,12 @@ exports.employees_get_all = (req, res, next) => {
             count: result.rowCount,
             employees: result.rows.map((employee) => {
               return {
-                EmployeeId: employee.employeeId,
-                EmployeeFName: employee.employeeFName,
-                EmployeeLName: employee.employeeLName,
-                StartHour: employee.startHour,
-                StartMinute: employee.startMinute,
-                TotalHours: employee.totalHours,
+                employeeId: employee.employeeId,
+                employeeFName: employee.employeeFName,
+                employeeLName: employee.employeeLName,
+                startHour: employee.startHour,
+                startMinute: employee.startMinute,
+                totalHours: employee.totalHours,
               };
             }),
           };
