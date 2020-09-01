@@ -59,7 +59,7 @@ UPdATE "Kacjux"."Employees"
 SET "startHour" = 12, "startMinute" = 30
 WHERE "employeeFName" = 'Jack' AND "employeeLName" = 'Xu';
 
-CREATE OR REPLACE PROCEDURE "Kacjux"."ChockIn"(fname VARCHAR(150), lname VARCHAR(150), hour INT, minute INT)
+CREATE OR REPLACE PROCEDURE "Kacjux"."ClockIn"(fname VARCHAR(150), lname VARCHAR(150), hour INT, minute INT)
 LANGUAGE SQL
 AS $$
 UPdATE "Kacjux"."Employees"
@@ -67,14 +67,14 @@ SET "startHour" = hour, "startMinute" = minute, "date" = CURRENT_TIMESTAMP
 WHERE "employeeFName" = fname AND "employeeLName" = lname
 $$;
 
-CALL "Kacjux"."ChockIn"('Jack', 'Xu', 12, 40);
+CALL "Kacjux"."ClockIn"('Jack', 'Xu', 12, 40);
 
 ------ Clock out ------
 UPdATE "Kacjux"."Employees"
 SET "startHour" = -1, "startMinute" = -1, "totalHours" = 15
 WHERE "employeeFName" = 'Jack' AND "employeeLName" = 'Xu'
 
-CREATE OR REPLACE PROCEDURE "Kacjux"."ChockOut"(fname VARCHAR(150), lname VARCHAR(150), totalhours INT)
+CREATE OR REPLACE PROCEDURE "Kacjux"."ClockOut"(fname VARCHAR(150), lname VARCHAR(150), totalhours INT)
 LANGUAGE SQL
 AS $$
 UPdATE "Kacjux"."Employees"
@@ -82,7 +82,7 @@ SET "startHour" = -1, "startMinute" = -1, "totalHours" = totalhours, "date" = CU
 WHERE "employeeFName" = fname AND "employeeLName" = lname
 $$;
 
-CALL "Kacjux"."ChockOut"('Jack', 'Xu', 50);
+CALL "Kacjux"."ClockOut"('Jack', 'Xu', 50);
 
 ------ Monthly reset ------
 UPdATE "Kacjux"."Employees"

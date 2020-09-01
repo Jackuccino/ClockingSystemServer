@@ -16,15 +16,9 @@ router.get(
 //   EmployeeController.totalhours_get_by_name
 // );
 
-router.patch(
-  "/chock-in/:employeeFName/:employeeLName",
-  EmployeeController.employee_chock_in
-);
+router.patch("/clock-in", EmployeeController.employee_clock_in);
 
-router.patch(
-  "/chock-out/:employeeFName/:employeeLName",
-  EmployeeController.employee_chock_out
-);
+router.patch("/clock-out", EmployeeController.employee_clock_out);
 
 router.patch("/monthly-reset", EmployeeController.monthly_reset);
 

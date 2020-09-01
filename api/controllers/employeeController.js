@@ -54,7 +54,6 @@ exports.employees_get_all = (req, res, next) => {
 
 exports.employees_post = (req, res, next) => {
   const employee = {
-    employeeId: req.body.employeeId,
     employeeFName: req.body.employeeFName,
     employeeLName: req.body.employeeLName,
     StartHour: req.body.startHour,
@@ -113,16 +112,16 @@ exports.employee_get_by_name = (req, res, next) => {
 //     });
 // };
 
-exports.employee_chock_in = (req, res, next) => {
+exports.employee_clock_in = (req, res, next) => {
   pool
     .connect()
     .then((client) => {
-      const sql = 'CALL "Kacjux"."ChockIn"($1, $2, $3, $4);';
+      const sql = 'CALL "Kacjux"."ClockIn"($1, $2, $3, $4);';
       const params = [
-        req.params.employeeFName,
-        req.params.employeeLName,
-        req.body.hour,
-        req.body.minute,
+        req.body.employeeFName,
+        req.body.employeeLName,
+        req.body.startHour,
+        req.body.startMinute,
       ];
       return client
         .query(sql, params)
@@ -130,7 +129,7 @@ exports.employee_chock_in = (req, res, next) => {
           client.release();
           res.status(200).json({
             result: "ok",
-            message: result.employeeFName + " chocking in... Done!",
+            message: "clocking in... Done!",
           });
         })
         .catch((err) => {
@@ -145,14 +144,14 @@ exports.employee_chock_in = (req, res, next) => {
     });
 };
 
-exports.employee_chock_out = (req, res, next) => {
+exports.employee_clock_out = (req, res, next) => {
   pool
     .connect()
     .then((client) => {
-      const sql = 'CALL "Kacjux"."ChockOut"($1, $2, $3);';
+      const sql = 'CALL "Kacjux"."ClockOut"($1, $2, $3);';
       const params = [
-        req.params.employeeFName,
-        req.params.employeeLName,
+        req.body.employeeFName,
+        req.body.employeeLName,
         req.body.totalHours,
       ];
       return client
@@ -161,7 +160,7 @@ exports.employee_chock_out = (req, res, next) => {
           client.release();
           res.status(200).json({
             result: "ok",
-            message: result.employeeFName + " chocking out... Done!",
+            message: "clocking out... Done!",
           });
         })
         .catch((err) => {
