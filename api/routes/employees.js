@@ -11,8 +11,6 @@ router.get(
   EmployeeController.employee_get_by_name
 );
 
-router.get("/total-hours", EmployeeController.totalhours_get_all);
-
 // router.get(
 //   "/total-hours/:employeeName",
 //   EmployeeController.totalhours_get_by_name
