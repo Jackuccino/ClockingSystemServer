@@ -16,9 +16,15 @@ router.get(
 //   EmployeeController.totalhours_get_by_name
 // );
 
-router.patch("/check-in/:employeeName", EmployeeController.employee_check_in);
+router.patch(
+  "/chock-in/:employeeFName/:employeeLName",
+  EmployeeController.employee_chock_in
+);
 
-router.patch("/check-out/:employeeName", EmployeeController.employee_check_out);
+router.patch(
+  "/chock-out/:employeeFName/:employeeLName",
+  EmployeeController.employee_chock_out
+);
 
 router.patch("/monthly-reset", EmployeeController.monthly_reset);
 

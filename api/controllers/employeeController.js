@@ -113,7 +113,7 @@ exports.employee_get_by_name = (req, res, next) => {
 //     });
 // };
 
-exports.employee_check_in = (req, res, next) => {
+exports.employee_chock_in = (req, res, next) => {
   pool
     .connect()
     .then((client) => {
@@ -145,7 +145,7 @@ exports.employee_check_in = (req, res, next) => {
     });
 };
 
-exports.employee_check_out = (req, res, next) => {
+exports.employee_chock_out = (req, res, next) => {
   pool
     .connect()
     .then((client) => {
