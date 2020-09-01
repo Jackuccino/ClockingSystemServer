@@ -30,7 +30,8 @@ exports.employees_get_all = (req, res, next) => {
             employees: result.rows.map((employee) => {
               return {
                 EmployeeId: employee.employeeId,
-                EmployeeName: employee.employeeName,
+                EmployeeFName: employee.employeeFName,
+                EmployeeLName: employee.employeeLName,
                 StartHour: employee.startHour,
                 StartMinute: employee.startMinute,
                 TotalHours: employee.totalHours,
@@ -54,8 +55,10 @@ exports.employees_get_all = (req, res, next) => {
 exports.employees_post = (req, res, next) => {
   const employee = {
     employeeId: req.body.employeeId,
-    employeeName: req.body.employeeName,
-    startTime: req.body.startTime,
+    employeeFName: req.body.employeeFName,
+    employeeLName: req.body.employeeLName,
+    StartHour: req.body.startHour,
+    StartMinute: req.body.startMinute,
     totalHours: req.body.totalHours,
   };
   const response = {
@@ -67,7 +70,7 @@ exports.employees_post = (req, res, next) => {
 };
 
 exports.employee_get_by_name = (req, res, next) => {
-  const name = req.params.employeeName;
+  const name = req.params.employeeFName;
   const response = {
     result: "ok",
     name: name,
@@ -114,15 +117,20 @@ exports.employee_check_in = (req, res, next) => {
   pool
     .connect()
     .then((client) => {
-      const sql = 'CALL "Kacjux"."ChockIn"($1, $2, $3);';
-      const params = [req.params.employeeName, req.body.hour, req.body.minute];
+      const sql = 'CALL "Kacjux"."ChockIn"($1, $2, $3, $4);';
+      const params = [
+        req.params.employeeFName,
+        req.params.employeeLName,
+        req.body.hour,
+        req.body.minute,
+      ];
       return client
         .query(sql, params)
         .then((result) => {
           client.release();
           res.status(200).json({
             result: "ok",
-            message: employee_name + " chocking in... Done!",
+            message: result.employeeFName + " chocking in... Done!",
           });
         })
         .catch((err) => {
@@ -141,15 +149,19 @@ exports.employee_check_out = (req, res, next) => {
   pool
     .connect()
     .then((client) => {
-      const sql = 'CALL "Kacjux"."ChockOut"($1, $2);';
-      const params = [req.params.employeeName, req.body.totalHours];
+      const sql = 'CALL "Kacjux"."ChockOut"($1, $2, $3);';
+      const params = [
+        req.params.employeeFName,
+        req.params.employeeLName,
+        req.body.totalHours,
+      ];
       return client
         .query(sql, params)
         .then((result) => {
           client.release();
           res.status(200).json({
             result: "ok",
-            message: employee_name + " chocking out... Done!",
+            message: result.employeeFName + " chocking out... Done!",
           });
         })
         .catch((err) => {
