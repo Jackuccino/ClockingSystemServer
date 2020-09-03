@@ -29,12 +29,13 @@ exports.employees_get_all = (req, res, next) => {
             count: result.rowCount,
             employees: result.rows.map((employee) => {
               return {
-                EmployeeId: employee.employeeId,
-                EmployeeFName: employee.employeeFName,
-                EmployeeLName: employee.employeeLName,
-                StartHour: employee.startHour,
-                StartMinute: employee.startMinute,
-                TotalHours: employee.totalHours,
+                id: employee.id,
+                employeeFName: employee.employeeFName,
+                employeeLName: employee.employeeLName,
+                startHour: employee.startHour,
+                startMinute: employee.startMinute,
+                totalHours: employee.totalHours,
+                extraMinutes: employee.extraMinutes,
               };
             }),
           };
@@ -59,6 +60,7 @@ exports.employees_post = (req, res, next) => {
     StartHour: req.body.startHour,
     StartMinute: req.body.startMinute,
     totalHours: req.body.totalHours,
+    totalMinutes: req.body.extraMinutes,
   };
   const response = {
     result: "ok",
@@ -67,50 +69,6 @@ exports.employees_post = (req, res, next) => {
   };
   res.status(200).json(response);
 };
-
-exports.employee_get_by_name = (req, res, next) => {
-  const name = req.params.employeeFName;
-  const response = {
-    result: "ok",
-    name: name,
-    message: "Handling GET by ID requests to /employees/employeeId",
-  };
-  res.status(200).json(response);
-};
-
-// exports.totalhours_get_by_name = (req, res, next) => {
-//   const employee_name = req.params.employeeName;
-//   pool
-//     .connect()
-//     .then(client => {
-//       const sql = 'SELECT * FROM "Kacjux"."TotalHoursByName"($1);';
-//       const params = [employee_name];
-//       return client
-//         .query(sql, params)
-//         .then(result => {
-//           client.release();
-//           if (!result.rowCount) {
-//             return res.status(404).json({ message: "Employee not found" });
-//           }
-//           res.status(200).json({
-//             result: "ok",
-//             employees: {
-//               Name: result.rows[0].employeename,
-//               TotalHours: result.rows[0].totalhours
-//             }
-//           });
-//         })
-//         .catch(err => {
-//           client.release();
-//           console.log(err);
-//           res.status(500).json({ error: err });
-//         });
-//     })
-//     .catch(err => {
-//       console.log(err);
-//       res.status(500).json({ error: err });
-//     });
-// };
 
 exports.employee_clock_in = (req, res, next) => {
   pool
@@ -148,11 +106,12 @@ exports.employee_clock_out = (req, res, next) => {
   pool
     .connect()
     .then((client) => {
-      const sql = 'CALL "Kacjux"."ClockOut"($1, $2, $3);';
+      const sql = 'CALL "Kacjux"."ClockOut"($1, $2, $3, $4);';
       const params = [
         req.body.employeeFName,
         req.body.employeeLName,
         req.body.totalHours,
+        req.body.extraMinutes,
       ];
       return client
         .query(sql, params)

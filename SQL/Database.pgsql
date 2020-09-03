@@ -3,12 +3,13 @@ DROP TABLE "Kacjux"."Employees";
 
 CREATE TABLE "Kacjux"."Employees"
 (
-  "employeeId" SERIAL NOT NULL PRIMARY KEY,
+  "id" SERIAL NOT NULL PRIMARY KEY,
   "employeeFName" VARCHAR(150) NOT NULL,
   "employeeLName" VARCHAR(150) NOT NULL,
   "startHour" INT NOT NULL,
   "startMinute" INT NOT NULL,
   "totalHours" INT NOT NULL,
+  "extraMinutes" INT NOT NULL,
   "date" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 )
 WITH (
@@ -17,12 +18,16 @@ WITH (
 ALTER TABLE "Kacjux"."Employees"
   OWNER TO jackxu;
 
------- Add an employee ------
-INSERT INTO "Kacjux"."Employees" ("employeeFName", "employeeLName", "startHour", "startMinute", "totalHours")
-VALUES('Jenny', 'Chan', -1, -1, 0);
+------ Remove all employee ------
+TRUNCATE TABLE "Kacjux"."Employees"
+RESTART IDENTITY
 
-INSERT INTO "Kacjux"."Employees" ("employeeFName", "employeeLName", "startHour", "startMinute", "totalHours")
-VALUES('Jack', 'Xu', -1, -1, 0);
+------ Add an employee ------
+INSERT INTO "Kacjux"."Employees" ("employeeFName", "employeeLName", "startHour", "startMinute", "totalHours", "extraMinutes")
+VALUES('Jenny', 'Chan', -1, -1, 0, 0);
+
+INSERT INTO "Kacjux"."Employees" ("employeeFName", "employeeLName", "startHour", "startMinute", "totalHours", "extraMinutes")
+VALUES('Jack', 'Xu', -1, -1, 0, 0);
 
 ------ Get all employees ------
 SELECT * FROM "Kacjux"."Employees";
@@ -36,23 +41,6 @@ SELECT * FROM "Kacjux"."Employees";
 $$;
 
 SELECT * FROM "Kacjux"."Get_All_Employees"();
-
------- Get total hours by name ------
--- SELECT "employeeFName", "totalHours"
--- FROM "Kacjux"."Employees"
--- WHERE "employeeFName" = 'Jack';
-
--- DROP FUNCTION "Kacjux"."totalHoursByName"(name VARCHAR(150));
--- CREATE FUNCTION "Kacjux"."totalHoursByName"(name VARCHAR(150))
--- RETURNS TABLE (employeeFname VARCHAR(150), totalhours INT)
--- LANGUAGE SQL
--- AS $$
---     SELECT "employeeFName" AS employeeFname, "totalHours" AS totalhours
---     FROM "Kacjux"."Employees"
---     WHERE "employeeFName" = name
--- $$;
-
--- SELECT * FROM "Kacjux"."totalHoursByName"('Jack');
 
 ------ Clock in ------
 UPdATE "Kacjux"."Employees"
@@ -74,11 +62,11 @@ UPdATE "Kacjux"."Employees"
 SET "startHour" = -1, "startMinute" = -1, "totalHours" = 15
 WHERE "employeeFName" = 'Jack' AND "employeeLName" = 'Xu'
 
-CREATE OR REPLACE PROCEDURE "Kacjux"."ClockOut"(fname VARCHAR(150), lname VARCHAR(150), totalhours INT)
+CREATE OR REPLACE PROCEDURE "Kacjux"."ClockOut"(fname VARCHAR(150), lname VARCHAR(150), totalhours INT, extraminutes INT)
 LANGUAGE SQL
 AS $$
 UPdATE "Kacjux"."Employees"
-SET "startHour" = -1, "startMinute" = -1, "totalHours" = totalhours, "date" = CURRENT_TIMESTAMP
+SET "startHour" = -1, "startMinute" = -1, "totalHours" = totalhours, "extraMinutes" = extraminutes, "date" = CURRENT_TIMESTAMP
 WHERE "employeeFName" = fname AND "employeeLName" = lname
 $$;
 
@@ -92,7 +80,7 @@ CREATE OR REPLACE PROCEDURE "Kacjux"."MonthlyReset"()
 LANGUAGE SQL
 AS $$
 UPdATE "Kacjux"."Employees"
-SET "startHour" = -1, "startMinute" = -1, "totalHours" = 0, "date" = CURRENT_TIMESTAMP
+SET "startHour" = -1, "startMinute" = -1, "totalHours" = 0, "extraMinutes" = 0, "date" = CURRENT_TIMESTAMP
 $$;
 
 CALL "Kacjux"."MonthlyReset"();
